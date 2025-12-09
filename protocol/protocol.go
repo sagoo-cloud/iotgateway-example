@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"context"
+
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gookit/event"
 	"github.com/sagoo-cloud/iotgateway/consts"
