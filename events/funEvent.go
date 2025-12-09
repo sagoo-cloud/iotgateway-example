@@ -6,10 +6,12 @@ import (
 )
 
 func Init() {
-	// 向设备发送命令
+	// 向设备发送设置属性的命令
 	event.On(events.PropertySetEvent, event.ListenerFunc(modbusWriteData), event.Normal)
 
-	//如果要实现服务上发事件，可以在这里添加，事件名称为SagooIoT中定义的下发服务标识名称
+	//如果要实现服务下发事件，可以在这里添加，事件名称为SagooIoT中定义的下发服务标识名称
+
+	// 注意：这只处理服务下发事件，如果要处理属性上报事件，请在protocol中实现
 }
 
 // modbusWriteData 向设备发送命令事件
