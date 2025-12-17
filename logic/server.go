@@ -47,12 +47,21 @@ func Init() {
 					},
 				},
 				{
-					"ProductKey": "exampleDeviceProductKey3",
-					"DeviceKey":  "exampleDeviceKey3",
-					"PropertieDataList": map[string]interface{}{
-						"va": grand.N(100, 200),
-						"vb": grand.N(100, 200),
-						"vc": grand.N(100, 200),
+					"ProductKey":     "exampleDeviceProductKey3",
+					"DeviceKey":      "exampleDeviceKey3",
+					consts.EventName: "PowerErrorEvent", // 事件名称，这个值是需要事先在SagooIoT 平台定义好的事件名称
+					consts.EventDataList: map[string]interface{}{
+						"vababa": grand.N(800, 1000),
+						"vacdcd": "error info",
+					},
+				},
+				{
+					"ProductKey":     "exampleDeviceProductKey4",
+					"DeviceKey":      "exampleDeviceKey4",
+					consts.EventName: "PowerError2Event", // 事件名称，这个值是需要事先在SagooIoT 平台定义好的事件名称
+					consts.EventDataList: map[string]interface{}{
+						"vababa": grand.N(1000, 1500),
+						"vacdcd": grand.N(1500, 2000),
 					},
 				},
 			}
@@ -83,9 +92,32 @@ func Init() {
 
 			//推送数据
 			out := g.Map{
-				"ProductKey":        "exampleDeviceProductKey",
-				"DeviceKey":         "exampleDeviceKey",
-				"PropertieDataList": propertieData,
+				"ProductKey":             "exampleDeviceProductKey",
+				"DeviceKey":              "exampleDeviceKey",
+				consts.PropertieDataList: propertieData,
+			}
+
+			event.MustFire(consts.PushAttributeDataToMQTT, out)
+		}
+	}()
+
+	// 定时向SagooIoT 推送设备事件数据
+	go func() {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+		for range ticker.C {
+
+			//模拟向SagooIoT 发送数据。========== 测试推送数据 ==========
+			var propertieData = make(map[string]interface{})
+			propertieData["vababa"] = grand.N(800, 1000)
+
+			//推送数据
+			out := g.Map{
+				"ProductKey":         "exampleDeviceProductKey",
+				"DeviceKey":          "exampleDeviceKey",
+				consts.EventName:     "PowerErrorEvent", // 事件名称，这个值是需要事先在SagooIoT 平台定义好的事件名称
+				consts.EventDataList: propertieData,
 			}
 
 			event.MustFire(consts.PushAttributeDataToMQTT, out)
