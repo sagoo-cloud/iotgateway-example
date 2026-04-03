@@ -101,23 +101,25 @@ func Init() {
 		}
 	}()
 
-	// 定时向SagooIoT 推送设备事件数据
+	// 定时向SagooIoT 推送设备事件数据（单 Topic 事件，与平台约定格式一致）
+	// JSON 形态：id/version/sys/params.value/params.time/method，其中 params.time 为 Unix 毫秒。
 	go func() {
 		ticker := time.NewTicker(5 * time.Second)
 		defer ticker.Stop()
 
 		for range ticker.C {
 
-			//模拟向SagooIoT 发送数据。========== 测试推送数据 ==========
-			var propertieData = make(map[string]interface{})
-			propertieData["vababa"] = grand.N(800, 1000)
-
-			//推送数据
+			// 与物模型事件标识、输出参数标识保持一致（示例：事件 DeviceEvent，输出 Power、WF）
 			out := g.Map{
-				"ProductKey":         "exampleDeviceProductKey",
-				"DeviceKey":          "exampleDeviceKey",
-				consts.EventName:     "PowerErrorEvent", // 事件名称，这个值是需要事先在SagooIoT 平台定义好的事件名称
-				consts.EventDataList: propertieData,
+				"ProductKey":     "exampleDeviceProductKey",
+				"DeviceKey":      "exampleDeviceKey",
+				consts.EventName: "DeviceEvent",
+				consts.EventDataList: map[string]interface{}{
+					"Power": "on",
+					"WF":    "2",
+				},
+				// 显式传入毫秒时间；不传时由 SDK 填当前 Unix 毫秒
+				consts.EventTime: time.Now().UnixMilli(),
 			}
 
 			event.MustFire(consts.PushAttributeDataToMQTT, out)

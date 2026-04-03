@@ -2,12 +2,12 @@ module sagoo-example-gateway
 
 go 1.24.0
 
-//replace github.com/sagoo-cloud/iotgateway v1.1.1 => ../iotgateway
+replace github.com/sagoo-cloud/iotgateway v1.1.4 => ../code/sagoo-cloud/iotgateway
 
 require (
 	github.com/gogf/gf/v2 v2.9.6
 	github.com/gookit/event v1.2.0
-	github.com/sagoo-cloud/iotgateway v1.1.1
+	github.com/sagoo-cloud/iotgateway v1.1.4
 )
 
 require (
